@@ -33,9 +33,9 @@
         </managementContext>
 
         <persistenceAdapter>
-<% if @persistence_adapter == 'kahadb' -%>
+<% if @persistence_adapter_real == 'kahaDB' -%>
             <kahaDB directory="<%= @data_dir %>/kahadb"/>
-<% elsif @persistence_adapter == 'jdbc' -%>
+<% elsif @persistence_adapter_real == 'jdbc' -%>
             <jdbcPersistenceAdapter dataDirectory="<%= @data_dir %>/jdbc"/>
 <% end -%>
         </persistenceAdapter>
