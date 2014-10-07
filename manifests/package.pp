@@ -1,5 +1,6 @@
-class activemq::package (
-  $version = undef
+class activemq::package(
+  $version = undef,
+  $versionlock = false
 ) {
 
   validate_re($version, '^[~+._0-9a-zA-Z:-]+$')
@@ -10,6 +11,16 @@ class activemq::package (
     ensure  => $version_real
   }
 
+  case $versionlock {
+    true: {
+      packagelock { 'activemq': }
+    }
+    false: {
+      packagelock { 'activemq': ensure => absent }
+    }
+    default: { fail('Class[Activemq::Package]: parameter versionlock must be true or false') }
+  }
+
   if $::osfamily == 'RedHat' {
     file { '/etc/init.d/activemq':
       ensure  => file,
@@ -17,4 +28,5 @@ class activemq::package (
       content => template("${module_name}/init/activemq"),
     }
   }
+
 }

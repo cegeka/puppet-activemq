@@ -12,7 +12,7 @@
         </property>
     </bean>
 
-		<broker xmlns="http://activemq.apache.org/schema/core" brokerName="localhost" useJmx="true" dataDirectory="<%= @data_dir %>">
+    <broker xmlns="http://activemq.apache.org/schema/core" brokerName="localhost" useJmx="true" dataDirectory="<%= @data_dir %>">
 
         <destinationPolicy>
             <policyMap>
@@ -33,10 +33,16 @@
         </managementContext>
 
         <persistenceAdapter>
-<% if @persistence_adapter_real == 'kahaDB' -%>
+<% if @persistence_adapter_real == 'kahadb' -%>
             <kahaDB directory="<%= @data_dir %>/kahadb"/>
 <% elsif @persistence_adapter_real == 'jdbc' -%>
+<% if @persistence_db_type == 'derby' -%>
             <jdbcPersistenceAdapter dataDirectory="<%= @data_dir %>/jdbc"/>
+<% elsif @persistence_db_type == 'mysql' -%>
+            <jdbcPersistenceAdapter dataSource="#mysql-ds" />
+<% elsif @persistence_db_type == 'oracle' -%>
+            <jdbcPersistenceAdapter dataSource="#oracle-ds" />
+<% end -%>
 <% end -%>
         </persistenceAdapter>
 
@@ -84,7 +90,29 @@
         </transportConnectors>
     </broker>
 
+<% if @persistence_adapter_real == 'jdbc' -%>
+<% if @persistence_db_type == 'mysql' -%>
+    <bean id="mysql-ds" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="<%= @persistence_db_url %>"/>
+        <property name="username" value="<%= @persistence_db_username %>"/>
+        <property name="password" value="<%= @persistence_db_password %>"/>
+        <property name="maxActive" value="200"/>
+        <property name="poolPreparedStatements" value="true"/>
+    </bean>
+<% elsif @persistence_db_type == 'oracle' -%>
+    <bean id="oracle-ds" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url" value="<%= @persistence_db_url %>"/>
+        <property name="username" value="<%= @persistence_db_username %>"/>
+        <property name="password" value="<%= @persistence_db_password %>"/>
+        <property name="maxActive" value="200"/>
+        <property name="poolPreparedStatements" value="true"/>
+    </bean>
+<% end -%>
+<% end -%>
+
 <% if @webconsole_real -%>
-      <import resource="jetty.xml"/>
+    <import resource="jetty.xml"/>
 <% end -%>
 </beans>

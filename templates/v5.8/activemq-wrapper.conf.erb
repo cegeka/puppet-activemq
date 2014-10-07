@@ -25,7 +25,7 @@ set.default.ACTIVEMQ_BASE=/usr/share/activemq
 wrapper.working.dir=/var/log/activemq
 
 # Java Application
-wrapper.java.command=java
+wrapper.java.command=/usr/java/latest/bin/java
 
 # Java Main class.  This class must implement the WrapperListener interface
 #  or guarantee that the WrapperManager class is initialized.  Helper
@@ -38,8 +38,13 @@ wrapper.java.mainclass=org.tanukisoftware.wrapper.WrapperSimpleApp
 wrapper.java.classpath.1=/usr/share/java/tanukiwrapper.jar
 wrapper.java.classpath.2=%ACTIVEMQ_HOME%/bin/run.jar
 
-# Uncomment to add mysql support
-#wrapper.java.classpath.3=/usr/share/java/mysql-connector-java.jar
+<% if @persistence_adapter_real == 'jdbc' -%>
+<% if @persistence_db_type == 'mysql' -%>
+wrapper.java.classpath.3=/usr/share/java/mysql-connector-java.jar
+<% elsif @persistence_db_type == 'oracle' -%>
+wrapper.java.classpath.3=/usr/share/java/ojdbc<%= @persistence_db_driver_version %>.jar
+<% end -%>
+<% end -%>
 
 # Java Library Path (location of Wrapper.DLL or libwrapper.so)
 # Handle both 32bit and 64bit tanukiwrapper
