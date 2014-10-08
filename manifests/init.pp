@@ -21,6 +21,7 @@ class activemq(
   $persistence_db_url = undef,
   $persistence_db_username = undef,
   $persistence_db_password = undef,
+  $mqtt_enabled = false,
   $webconsole = true
 ) {
 
@@ -35,15 +36,17 @@ class activemq(
   validate_re($persistence_adapter, '^kahadb$|^jdbc$')
   validate_re($persistence_db_type, '^derby$|^mysql$|^oracle$')
   validate_re($persistence_db_driver_version, '^6$|^7$')
+  validate_bool($mqtt_enabled)
   validate_bool($webconsole)
 
   $version_real = $version
   $versionlock_real = $versionlock
   $ensure_real = $ensure
-  $webconsole_real = $webconsole
   $persistence_adapter_real = $persistence_adapter
   $persistence_db_type_real = $persistence_db_type
   $persistence_db_driver_version_real = $persistence_db_driver_version
+  $mqtt_enabled_real = $mqtt_enabled
+  $webconsole_real = $webconsole
 
   class { 'activemq::package':
     version     => $version_real,
