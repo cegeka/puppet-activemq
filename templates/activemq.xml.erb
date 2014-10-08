@@ -88,7 +88,7 @@
             <transportConnector name="openwire" uri="tcp://0.0.0.0:61616"/>
             <transportConnector name="stomp+nio" uri="stomp+nio://0.0.0.0:61613"/>
 <% if @mqtt_enabled_real -%>
-            <transportConnector name="mqtt+nio" uri="mqtt+nio://localhost:1883"/>
+            <transportConnector name="mqtt+nio" uri="mqtt+nio://0.0.0.0:1883"/>
 <% end -%>
         </transportConnectors>
     </broker>
