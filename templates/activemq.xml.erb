@@ -90,6 +90,9 @@
 <% if @mqtt_enabled_real -%>
             <transportConnector name="mqtt+nio" uri="mqtt+nio://0.0.0.0:1883"/>
 <% end -%>
+<% if @webconsole_real -%>
+            <transportConnector name="vm" uri="vm://localhost"/>
+<% end -%>
         </transportConnectors>
     </broker>
 
