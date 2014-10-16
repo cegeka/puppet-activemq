@@ -55,8 +55,8 @@
               <authenticationUser username="mcollective" password="secret" groups="mcollective,admins,everyone"/>
             </users>
           </simpleAuthenticationPlugin>
+<% if !@mqtt_enabled_real -%>
 <%# disable authorization plugin until ActiveMQ MQTT bug is fixed %>
-<% if @mqtt_enabled_real != nil -%>
           <authorizationPlugin>
             <map>
               <authorizationMap>
