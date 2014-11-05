@@ -87,11 +87,24 @@
             </systemUsage>
         </systemUsage>
 
+<% if @ssl_enabled_real -%>
+        <sslContext>
+            <sslContext keyStore="file:<%= @ssl_keystore %>"
+                        keyStorePassword="<%= @ssl_keystore_password %>"
+                        keyStoreKeyPassword="<%= @ssl_keystore_key_password %>"
+                        trustStore="file:<%= @ssl_truststore %>"
+                        trustStorePassword="<%= @ssl_truststore_password %>" />
+        </sslContext>
+<% end -%>
+
         <transportConnectors>
             <transportConnector name="openwire" uri="tcp://0.0.0.0:61616"/>
             <transportConnector name="stomp+nio" uri="stomp+nio://0.0.0.0:61613"/>
 <% if @mqtt_enabled_real -%>
             <transportConnector name="mqtt+nio" uri="mqtt+nio://0.0.0.0:1883"/>
+<% end -%>
+<% if @mqtt_ssl_enabled_real -%>
+            <transportConnector name="mqtt+ssl" uri="mqtt+ssl://0.0.0.0:8883?needClientAuth=true"/>
 <% end -%>
 <% if @webconsole_real -%>
             <transportConnector name="vm" uri="vm://localhost"/>

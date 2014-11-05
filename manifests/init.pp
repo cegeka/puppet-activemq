@@ -22,6 +22,13 @@ class activemq(
   $persistence_db_username = undef,
   $persistence_db_password = undef,
   $mqtt_enabled = false,
+  $mqtt_ssl_enabled = false,
+  $ssl_enabled = false,
+  $ssl_keystore = undef,
+  $ssl_keystore_password = undef,
+  $ssl_keystore_key_password = undef,
+  $ssl_truststore = undef,
+  $ssl_truststore_password = undef,
   $webconsole = true
 ) {
 
@@ -37,6 +44,8 @@ class activemq(
   validate_re($persistence_db_type, '^derby$|^mysql$|^oracle$')
   validate_re($persistence_db_driver_version, '^6$|^7$')
   validate_bool($mqtt_enabled)
+  validate_bool($mqtt_ssl_enabled)
+  validate_bool($ssl_enabled)
   validate_bool($webconsole)
 
   $version_real = $version
@@ -46,6 +55,8 @@ class activemq(
   $persistence_db_type_real = $persistence_db_type
   $persistence_db_driver_version_real = $persistence_db_driver_version
   $mqtt_enabled_real = $mqtt_enabled
+  $mqtt_ssl_enabled_real = $mqtt_ssl_enabled
+  $ssl_enabled_real = $ssl_enabled
   $webconsole_real = $webconsole
 
   class { 'activemq::package':
