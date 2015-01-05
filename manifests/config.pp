@@ -26,6 +26,13 @@ class activemq::config(
     notify  => Class['activemq::service']
   }
 
+  file { '/etc/activemq/jetty-realm.properties':
+    ensure  => file,
+    mode    => '0644',
+    content => template("${module_name}/jetty-realm.properties.erb"),
+    notify  => Class['activemq::service']
+  }
+
   file { "/usr/share/activemq/lib/ojdbc${persistence_db_driver_version}.jar":
     ensure => file,
     source => "puppet:///modules/${module_name}/drivers/oracle/ojdbc${persistence_db_driver_version}.jar"
