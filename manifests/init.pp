@@ -30,7 +30,14 @@ class activemq(
   $ssl_truststore = undef,
   $ssl_truststore_password = undef,
   $webconsole = true,
-  $webconsole_users = []
+  $webconsole_users = [
+    { 'username' => 'admin',
+      'password' => 'admin',
+      'role'     => 'admin' },
+    { 'username' => 'user',
+      'password' => 'user',
+      'role'     => 'user' }
+  ]
 ) {
 
   include stdlib
