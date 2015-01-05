@@ -17,10 +17,15 @@
 
 # Defines users that can access the web (console, demo, etc.)
 # username: password [,rolename ...]
+<%- if !@webconsole_users.empty? -%>
 <%- @webconsole_users.each do |user_entry| -%>
 <%- if user_entry.has_key?('role') -%>
 <%= user_entry['username'] %>: <%= user_entry['password'] %>, <%= user_entry['role'].to_a.join(", ") %>
 <%- else -%>
 <%= user_entry['username'] %>: <%= user_entry['password'] %>
 <%- end -%>
+<%- end -%>
+<%- else -%>
+admin: admin, admin
+user: user, user
 <%- end -%>
