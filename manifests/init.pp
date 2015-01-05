@@ -30,7 +30,7 @@ class activemq(
   $ssl_truststore = undef,
   $ssl_truststore_password = undef,
   $webconsole = true,
-  $webconsole_users = {}
+  $webconsole_users = []
 ) {
 
   include stdlib
