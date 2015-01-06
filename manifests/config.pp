@@ -12,13 +12,6 @@ class activemq::config(
     group  => 'activemq'
   }
 
-  file { '/etc/activemq/activemq.xml':
-    ensure  => file,
-    mode    => '0644',
-    content => template("${module_name}/activemq.xml.erb"),
-    notify  => Class['activemq::service']
-  }
-
   file { '/etc/activemq/activemq-wrapper.conf':
     ensure  => file,
     mode    => '0644',
