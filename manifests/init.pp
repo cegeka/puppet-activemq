@@ -67,6 +67,8 @@ class activemq(
   $ssl_enabled_real = $ssl_enabled
   $webconsole_real = $webconsole
 
+  class { 'activemq::preconfig': }
+
   class { 'activemq::package':
     version     => $version_real,
     versionlock => $versionlock_real,
@@ -82,6 +84,7 @@ class activemq(
     ensure => $ensure_real
   }
 
-  Anchor['activemq::begin'] -> Class['Activemq::Package'] -> Class['Activemq::Config'] ~> Class['Activemq::Service'] -> Anchor['activemq::end']
+  Anchor['activemq::begin'] -> Class['Activemq::Preconfig'] -> Class['Activemq::Package']
+    -> Class['Activemq::Config'] ~> Class['Activemq::Service'] -> Anchor['activemq::end']
 
 }
