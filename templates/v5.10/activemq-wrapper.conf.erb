@@ -54,7 +54,7 @@ wrapper.java.additional.1=-Dactivemq.home=%ACTIVEMQ_HOME%
 wrapper.java.additional.2=-Dactivemq.base=%ACTIVEMQ_BASE%
 wrapper.java.additional.3=-Dactivemq.conf=%ACTIVEMQ_CONF%
 wrapper.java.additional.4=-Dactivemq.data=%ACTIVEMQ_DATA%
-wrapper.java.additional.5=-Dcom.sun.management.jmxremote=false
+wrapper.java.additional.5=-Dcom.sun.management.jmxremote=<%= @jmx_enabled %>
 wrapper.java.additional.6=-Dorg.apache.activemq.UseDedicatedTaskRunner=false
 
 # Garbage Collection
@@ -70,9 +70,20 @@ wrapper.java.additional.8=-XX:+CMSIncrementalMode
 #wrapper.java.additional.n=-Dderby.storage.fileSyncTransactionLog=true
 
 # Uncomment to enable jmx
+<% if @jmx_enabled -%>
+wrapper.java.additional.9=-Dcom.sun.management.jmxremote.ssl=false
+wrapper.java.additional.10=-Dcom.sun.management.jmxremote.port=<%= @jmx_remote_port %>
+wrapper.java.additional.11=-Dcom.sun.management.jmxremote.rmi.port=<%= @jmx_remote_rmi_port %>
+wrapper.java.additional.12=-Dcom.sun.management.jmxremote.authenticate=<%= @jmx_authentication_enabled %>
+<% if @jmx_authentication_enabled -%>
+wrapper.java.additional.13=-Dcom.sun.management.jmxremote.password.file=/etc/activemq/jmxremote.password
+wrapper.java.additional.14=-Dcom.sun.management.jmxremote.access.file=/etc/activemq/jmxremote.access
+<% end -%>
+<% else -%>
 #wrapper.java.additional.n=-Dcom.sun.management.jmxremote.port=1616
 #wrapper.java.additional.n=-Dcom.sun.management.jmxremote.authenticate=false
 #wrapper.java.additional.n=-Dcom.sun.management.jmxremote.ssl=false
+<% end -%>
 
 # Uncomment to enable YourKit profiling
 #wrapper.java.additional.n=-Xrunyjpagent

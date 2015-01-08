@@ -37,7 +37,11 @@ class activemq(
     { 'username' => 'user',
       'password' => 'user',
       'role'     => 'user' }
-  ]
+  ],
+  $jmx_enabled=false,
+  $jmx_remote_port='1616',
+  $jmx_remote_rmi_port='1617',
+  $jmx_authentication_enabled=false
 ) {
 
   include stdlib
