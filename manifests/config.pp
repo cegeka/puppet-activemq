@@ -12,6 +12,13 @@ class activemq::config(
     group  => 'activemq'
   }
 
+  file { '/data/activemq/heapdumps':
+    ensure  => directory,
+    owner   => 'activemq',
+    group   => 'activemq',
+    require => File['/data/activemq']
+  }
+
   file { '/etc/activemq/activemq-wrapper.conf':
     ensure  => file,
     mode    => '0644',
