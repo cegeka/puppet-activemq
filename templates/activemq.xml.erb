@@ -12,7 +12,7 @@
         </property>
     </bean>
 
-    <broker xmlns="http://activemq.apache.org/schema/core" brokerName="localhost" useJmx="true" dataDirectory="<%= @data_dir %>">
+    <broker xmlns="http://activemq.apache.org/schema/core" brokerName="localhost" useJmx="true" dataDirectory="<%= @data_dir %>" schedulerSupport="<%= @scheduler_support_enabled_real %>">
 
         <destinationPolicy>
             <policyMap>

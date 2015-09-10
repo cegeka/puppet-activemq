@@ -15,6 +15,7 @@ class activemq(
   $versionlock = false,
   $ensure = 'running',
   $data_dir = '/data/activemq',
+  $scheduler_support_enabled = false,
   $persistence_adapter = 'kahadb',
   $persistence_db_type = 'derby',
   $persistence_db_driver_version = '6',
@@ -60,6 +61,7 @@ class activemq(
   validate_bool($mqtt_ssl_enabled)
   validate_bool($ssl_enabled)
   validate_bool($webconsole)
+  validate_bool($scheduler_support_enabled)
 
   $version_real = $version
   $versionlock_real = $versionlock
@@ -69,6 +71,7 @@ class activemq(
   $persistence_db_driver_version_real = $persistence_db_driver_version
   $mqtt_enabled_real = $mqtt_enabled
   $mqtt_ssl_enabled_real = $mqtt_ssl_enabled
+  $scheduler_support_enabled_real = $scheduler_support_enabled
   $ssl_enabled_real = $ssl_enabled
   $webconsole_real = $webconsole
 
