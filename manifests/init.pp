@@ -43,7 +43,12 @@ class activemq(
   $jmx_remote_port='1616',
   $jmx_remote_rmi_port='1617',
   $jmx_authentication_enabled=false,
-  $heap_dump_path='/data/activemq/heapdumps'
+  $heap_dump_path='/data/activemq/heapdumps',
+  $tempUsage = '100 mb',
+  $storeUsage = '1 gb',
+  $memoryUsage = '20 mb',
+  $topic_memoryLimit = '1mb',
+  $queue_memoryLimit = '1mb',
 ) {
 
   include stdlib

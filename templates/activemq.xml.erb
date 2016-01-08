@@ -17,12 +17,12 @@
         <destinationPolicy>
             <policyMap>
               <policyEntries>
-                <policyEntry topic=">" producerFlowControl="true" memoryLimit="1mb">
+                <policyEntry topic=">" producerFlowControl="true" <% if @topic_memoryLimit -%> memoryLimit="<%= @topic_memoryLimit %>" <% end -%> >
                   <pendingSubscriberPolicy>
                     <vmCursor />
                   </pendingSubscriberPolicy>
                 </policyEntry>
-                <policyEntry queue=">" producerFlowControl="true" memoryLimit="1mb">
+                <policyEntry queue=">" producerFlowControl="true" <% if @queue_memoryLimit -%> memoryLimit="<%= @queue_memoryLimit %>" <% end -%> >
                 </policyEntry>
               </policyEntries>
             </policyMap>
@@ -79,13 +79,13 @@
         <systemUsage>
             <systemUsage>
                 <memoryUsage>
-                    <memoryUsage limit="20 mb"/>
+                    <memoryUsage limit="<%= @memoryUsage %>"/>
                 </memoryUsage>
                 <storeUsage>
-                    <storeUsage limit="1 gb"/>
+                    <storeUsage limit="<%= @storeUsage %>"/>
                 </storeUsage>
                 <tempUsage>
-                    <tempUsage limit="100 mb"/>
+                    <tempUsage limit="<%= @tempUsage %>"/>
                 </tempUsage>
             </systemUsage>
         </systemUsage>
