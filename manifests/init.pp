@@ -11,6 +11,7 @@
 # Sample Usage:
 #
 class activemq(
+  $package = 'activemq',
   $version = undef,
   $versionlock = false,
   $ensure = 'running',
@@ -49,6 +50,7 @@ class activemq(
   $memoryUsage = '20 mb',
   $topic_memoryLimit = '1mb',
   $queue_memoryLimit = '1mb',
+  $optional_config = undef,
 ) {
 
   include stdlib
@@ -80,9 +82,12 @@ class activemq(
   $ssl_enabled_real = $ssl_enabled
   $webconsole_real = $webconsole
 
-  class { 'activemq::preconfig': }
+  class { 'activemq::preconfig':
+    optional_config => $optional_config
+  }
 
   class { 'activemq::package':
+    package     => $package,
     version     => $version_real,
     versionlock => $versionlock_real,
     notify      => Class['activemq::service']

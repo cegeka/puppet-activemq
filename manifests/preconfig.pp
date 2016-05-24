@@ -1,4 +1,6 @@
-class activemq::preconfig {
+class activemq::preconfig (
+  $optional_config = undef
+) {
 
   file { '/etc/activemq':
     ensure => directory

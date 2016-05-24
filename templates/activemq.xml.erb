@@ -140,4 +140,10 @@
 <% if @webconsole_real -%>
     <import resource="jetty.xml"/>
 <% end -%>
+
+<% if @optional_config -%>
+<% @optional_config.each do |config| -%>
+      <import resource="<%= config %>"/>
+<% end -%>
+<% end -%>
 </beans>

@@ -1,4 +1,5 @@
 class activemq::package(
+  $package = undef,
   $version = undef,
   $versionlock = false
 ) {
@@ -7,7 +8,7 @@ class activemq::package(
 
   $version_real = $version
 
-  package { 'activemq':
+  package { $package :
     ensure  => $version_real
   }
 
