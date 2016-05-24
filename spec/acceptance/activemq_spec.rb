@@ -6,7 +6,7 @@ describe 'activemq' do
     it 'should work with no errors' do
       pp = <<-EOS
         include cegekarepos::cegeka
-        Yum::Repo['cegeka-custom-noarch']
+        Yum::Repo <| title == 'cegeka-custom-noarch' |>
         class { 'activemq':
           version => '5.13.2-2.cgk.el7',
         }
