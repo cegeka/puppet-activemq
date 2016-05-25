@@ -9,7 +9,7 @@ describe 'activemq' do
         Yum::Repo <| title == 'cegeka-custom-noarch' |>
 
         class { '::activemq':
-          version => '5.13.2-2.cgk.el7'
+          version => '5.10.0-2.cgk.el6'
         }
       EOS
 
