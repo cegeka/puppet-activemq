@@ -20,8 +20,10 @@ describe 'activemq' do
         }
       EOS
 
-      # Run it twice and test for idempotency
+      # Run it twice 
       apply_manifest(pp, :catch_failures => true)
+      apply_manifest(pp, :catch_failures => true)
+      # and test for idempotency
       apply_manifest(pp, :catch_changes => true)
     end
 
