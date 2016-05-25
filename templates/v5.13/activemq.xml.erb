@@ -1,19 +1,34 @@
 <beans
   xmlns="http://www.springframework.org/schema/beans"
-  xmlns:amq="http://activemq.apache.org/schema/core"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-  http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd
-  http://activemq.apache.org/camel/schema/spring http://activemq.apache.org/camel/schema/spring/camel-spring.xsd">
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+  http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
-            <value>file:${activemq.base}/conf/credentials.properties</value>
+            <value>file:${activemq.conf}/credentials.properties</value>
         </property>
     </bean>
 
-    <broker xmlns="http://activemq.apache.org/schema/core" brokerName="localhost" useJmx="true" dataDirectory="<%= @data_dir %>" schedulerSupport="<%= @scheduler_support_enabled_real %>">
+    <bean id="logQuery" class="io.fabric8.insight.log.log4j.Log4jLogQuery"
+          lazy-init="false" scope="singleton"
+          init-method="start" destroy-method="stop">
+    </bean>
 
+    <!-- <broker xmlns="http://activemq.apache.org/schema/core" brokerName="localhost" dataDirectory="${activemq.data}"> -->
+    <broker xmlns="http://activemq.apache.org/schema/core" brokerName="localhost" useJmx="true" dataDirectory="<%= @data_dir %>" schedulerSupport="<%= @scheduler_support_enabled_real %>" advisorySupport="<%= @advisorysupport %>">
+
+        <!-- <destinationPolicy>
+            <policyMap>
+              <policyEntries>
+                <policyEntry topic=">" >
+                  <pendingMessageLimitStrategy>
+                    <constantPendingMessageLimitStrategy limit="1000"/>
+                  </pendingMessageLimitStrategy>
+                </policyEntry>
+              </policyEntries>
+            </policyMap>
+        </destinationPolicy> -->
         <destinationPolicy>
             <policyMap>
               <policyEntries>
@@ -29,13 +44,24 @@
         </destinationPolicy>
 
         <destinationInterceptors>
+          <% if @selectoraware == true %>
+            <virtualDestinationInterceptor>
+                <virtualDestinations>
+                    <virtualTopic selectorAware="true"/>
+                </virtualDestinations>
+            </virtualDestinationInterceptor>
+          <% end %>
         </destinationInterceptors>
 
+
         <managementContext>
-            <managementContext createConnector="false"/>
+            <!-- <managementContext createConnector="false"/> -->
+            <!-- VENTOURIS NEEDS THIS VALUE SET TO TRUE !!! -->
+            <managementContext createConnector="<%= @managementcontext_createconnector %>"/>
         </managementContext>
 
         <persistenceAdapter>
+            <!-- <kahaDB directory="${activemq.data}/kahadb"/> -->
 <% if @persistence_adapter_real == 'kahadb' -%>
             <kahaDB directory="<%= @data_dir %>/kahadb"/>
 <% elsif @persistence_adapter_real == 'jdbc' -%>
@@ -55,7 +81,9 @@
           <simpleAuthenticationPlugin>
             <users>
               <authenticationUser username="${activemq.username}" password="${activemq.password}" groups="admins,everyone"/>
-              <authenticationUser username="mcollective" password="secret" groups="mcollective,admins,everyone"/>
+<% @users.each do |username,value| -%>
+              <authenticationUser username="<%= username %>" password="<%= value['password'] %>" groups="<%= value['groups']  %>"/>
+<% end -%>
             </users>
           </simpleAuthenticationPlugin>
 <% if !@mqtt_enabled_real -%>
@@ -66,8 +94,9 @@
                 <authorizationEntries>
                   <authorizationEntry queue=">" write="admins" read="admins" admin="admins" />
                   <authorizationEntry topic=">" write="admins" read="admins" admin="admins" />
-                  <authorizationEntry topic="mcollective.>" write="mcollective" read="mcollective" admin="mcollective" />
-                  <authorizationEntry queue="mcollective.>" write="mcollective" read="mcollective" admin="mcollective" />
+<% @destinations.each do |destination,value| -%>
+                  <authorizationEntry <%= value['type'] %>="<%= destination %> write="<%= value['group'] %>" read="<%= value['group'] %>" admin="<%= value['group'] %>" />
+<% end -%>
                   <authorizationEntry topic="ActiveMQ.Advisory.>" read="everyone" write="everyone" admin="everyone"/>
                 </authorizationEntries>
               </authorizationMap>
@@ -101,19 +130,22 @@
 <% end -%>
 
         <transportConnectors>
-            <transportConnector name="openwire" uri="tcp://0.0.0.0:61616"/>
-            <transportConnector name="stomp+nio" uri="stomp+nio://0.0.0.0:61613"/>
-<% if @mqtt_enabled_real -%>
-            <transportConnector name="mqtt+nio" uri="mqtt+nio://0.0.0.0:1883"/>
-<% end -%>
-<% if @mqtt_ssl_enabled_real -%>
-            <transportConnector name="mqtt+ssl" uri="mqtt+ssl://0.0.0.0:8883?needClientAuth=true"/>
-<% end -%>
-<% if @webconsole_real -%>
-            <transportConnector name="vm" uri="vm://localhost"/>
+<% @transport_connector.each do |name,uri| -%>
+            <transportConnector name="<%= name %>" uri="<%= uri %>"/>
 <% end -%>
         </transportConnectors>
-    </broker>
+
+        <shutdownHooks>
+            <bean xmlns="http://www.springframework.org/schema/beans" class="org.apache.activemq.hooks.SpringContextHook" />
+        </shutdownHooks>
+
+    <destinations>
+<% @destinations.each do |destination,value| -%>
+      <<%= value['type'] %> physicalName="<%= destination  %>"/>
+<% end -%>
+    </destinations>
+
+  </broker>
 
 <% if @persistence_adapter_real == 'jdbc' -%>
 <% if @persistence_db_type == 'mysql' -%>
@@ -146,4 +178,6 @@
       <import resource="<%= config %>"/>
 <% end -%>
 <% end -%>
+
 </beans>
+
