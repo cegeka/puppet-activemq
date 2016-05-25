@@ -14,19 +14,23 @@ class activemq::package(
 
   case $versionlock {
     true: {
-      packagelock { 'activemq': }
+      packagelock { $package : }
     }
     false: {
-      packagelock { 'activemq': ensure => absent }
+      packagelock { $package : ensure => absent }
     }
     default: { fail('Class[Activemq::Package]: parameter versionlock must be true or false') }
   }
 
-  if $::osfamily == 'RedHat' {
-    file { '/etc/init.d/activemq':
-      ensure  => file,
-      mode    => '0755',
-      content => template("${module_name}/init/activemq"),
+  case $::osfamily {
+    'RedHat': {
+      if $::operatingsystemmajrelease < 7 {
+        file { '/etc/init.d/activemq':
+          ensure  => file,
+          mode    => '0755',
+          content => template("${module_name}/init/activemq"),
+        }
+      }
     }
   }
 
