@@ -1,5 +1,3 @@
-mod 'activemq',
-  :git => 'https://github.com/cegeka/puppet-activemq'
 mod 'stdlib',
   :git => 'https://github.com/cegeka/puppet-stdlib'
 mod 'yum',
