@@ -8,6 +8,10 @@ describe 'activemq' do
         include cegekarepos::cegeka
         Yum::Repo <| title == 'cegeka-custom-noarch' |>
 
+        file { '/data':
+          ensure => directory
+        }
+
         class { '::activemq':
           version => '5.10.0-2.cgk.el6'
         }
