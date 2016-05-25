@@ -1,5 +1,5 @@
 class activemq::preconfig (
-  $optional_config = undef
+  $optional_config = undef,
   $version = undef,
 ) {
 
