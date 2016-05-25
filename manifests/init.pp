@@ -82,11 +82,6 @@ class activemq(
   $ssl_enabled_real = $ssl_enabled
   $webconsole_real = $webconsole
 
-  class { 'activemq::preconfig':
-    version     => $version_real,
-    optional_config => $optional_config
-  }
-
   class { 'activemq::package':
     package     => $package,
     version     => $version_real,
@@ -96,6 +91,7 @@ class activemq(
 
   class { 'activemq::config':
     version                       => $version_real,
+    optional_config               => $optional_config,
     persistence_db_driver_version => $persistence_db_driver_version_real
   }
 
@@ -103,7 +99,7 @@ class activemq(
     ensure => $ensure_real
   }
 
-  Anchor['activemq::begin'] -> Class['Activemq::Package'] -> Class['Activemq::Preconfig']
+  Anchor['activemq::begin'] -> Class['Activemq::Package']
     -> Class['Activemq::Config'] ~> Class['Activemq::Service'] -> Anchor['activemq::end']
 
 }
