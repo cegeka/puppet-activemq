@@ -44,7 +44,7 @@ class activemq::config(
   file { '/etc/activemq/activemq.xml':
     ensure  => file,
     mode    => '0644',
-    content => template("${module_name}/${major_version_withoutrelease}/activemq.xml.erb"),
+    content => template("${module_name}/v${major_version_withoutrelease}/activemq.xml.erb"),
     replace => false,
     notify  => Class['activemq::service'],
     require => File['/etc/activemq']
