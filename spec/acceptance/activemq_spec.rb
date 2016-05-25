@@ -11,6 +11,9 @@ describe 'activemq' do
         file { '/data':
           ensure => directory
         }
+        package { 'yum-plugin-versionlock':
+          ensure => installed
+        }
 
         class { '::activemq':
           version => '5.10.0-2.cgk.el6'
