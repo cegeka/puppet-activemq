@@ -111,7 +111,7 @@ class activemq(
     advisorysupport                   => $advisorysupport_real,
     selectoraware                     => $selectoraware_real,
     managementcontext_createconnector => $managementcontext_createconnector_real,
-    transport_connector               => $transport_connector_real
+    transport_connector               => $transport_connector_real,
     users                             => $users_real
   }
 
