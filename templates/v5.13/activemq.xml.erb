@@ -1,0 +1,183 @@
+<beans
+  xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+  http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <value>file:${activemq.conf}/credentials.properties</value>
+        </property>
+    </bean>
+
+    <bean id="logQuery" class="io.fabric8.insight.log.log4j.Log4jLogQuery"
+          lazy-init="false" scope="singleton"
+          init-method="start" destroy-method="stop">
+    </bean>
+
+    <!-- <broker xmlns="http://activemq.apache.org/schema/core" brokerName="localhost" dataDirectory="${activemq.data}"> -->
+    <broker xmlns="http://activemq.apache.org/schema/core" brokerName="localhost" useJmx="true" dataDirectory="<%= @data_dir %>" schedulerSupport="<%= @scheduler_support_enabled_real %>" advisorySupport="<%= @advisorysupport %>">
+
+        <!-- <destinationPolicy>
+            <policyMap>
+              <policyEntries>
+                <policyEntry topic=">" >
+                  <pendingMessageLimitStrategy>
+                    <constantPendingMessageLimitStrategy limit="1000"/>
+                  </pendingMessageLimitStrategy>
+                </policyEntry>
+              </policyEntries>
+            </policyMap>
+        </destinationPolicy> -->
+        <destinationPolicy>
+            <policyMap>
+              <policyEntries>
+                <policyEntry topic=">" producerFlowControl="true" <% if @topic_memoryLimit -%> memoryLimit="<%= @topic_memoryLimit %>" <% end -%> >
+                  <pendingSubscriberPolicy>
+                    <vmCursor />
+                  </pendingSubscriberPolicy>
+                </policyEntry>
+                <policyEntry queue=">" producerFlowControl="true" <% if @queue_memoryLimit -%> memoryLimit="<%= @queue_memoryLimit %>" <% end -%> >
+                </policyEntry>
+              </policyEntries>
+            </policyMap>
+        </destinationPolicy>
+
+        <destinationInterceptors>
+          <% if @selectoraware == true %>
+            <virtualDestinationInterceptor>
+                <virtualDestinations>
+                    <virtualTopic selectorAware="true"/>
+                </virtualDestinations>
+            </virtualDestinationInterceptor>
+          <% end %>
+        </destinationInterceptors>
+
+
+        <managementContext>
+            <!-- <managementContext createConnector="false"/> -->
+            <!-- VENTOURIS NEEDS THIS VALUE SET TO TRUE !!! -->
+            <managementContext createConnector="<%= @managementcontext_createconnector %>"/>
+        </managementContext>
+
+        <persistenceAdapter>
+            <!-- <kahaDB directory="${activemq.data}/kahadb"/> -->
+<% if @persistence_adapter_real == 'kahadb' -%>
+            <kahaDB directory="<%= @data_dir %>/kahadb"/>
+<% elsif @persistence_adapter_real == 'jdbc' -%>
+<% if @persistence_db_type == 'derby' -%>
+            <jdbcPersistenceAdapter dataDirectory="<%= @data_dir %>/jdbc"/>
+<% elsif @persistence_db_type == 'mysql' -%>
+            <jdbcPersistenceAdapter dataSource="#mysql-ds" />
+<% elsif @persistence_db_type == 'oracle' -%>
+            <jdbcPersistenceAdapter dataSource="#oracle-ds" />
+<% end -%>
+<% end -%>
+        </persistenceAdapter>
+
+        <plugins>
+          <statisticsBrokerPlugin/>
+
+          <simpleAuthenticationPlugin>
+            <users>
+              <authenticationUser username="${activemq.username}" password="${activemq.password}" groups="admins,everyone"/>
+<% @users.each do |username,value| -%>
+              <authenticationUser username="<%= username %>" password="<%= value['password'] %>" groups="<%= value['groups']  %>"/>
+<% end -%>
+            </users>
+          </simpleAuthenticationPlugin>
+<% if !@mqtt_enabled_real -%>
+<%# disable authorization plugin until ActiveMQ MQTT bug is fixed %>
+          <authorizationPlugin>
+            <map>
+              <authorizationMap>
+                <authorizationEntries>
+                  <authorizationEntry queue=">" write="admins" read="admins" admin="admins" />
+                  <authorizationEntry topic=">" write="admins" read="admins" admin="admins" />
+<% @destinations.each do |destination,value| -%>
+                  <authorizationEntry <%= value['type'] %>="<%= destination %> write="<%= value['group'] %>" read="<%= value['group'] %>" admin="<%= value['group'] %>" />
+<% end -%>
+                  <authorizationEntry topic="ActiveMQ.Advisory.>" read="everyone" write="everyone" admin="everyone"/>
+                </authorizationEntries>
+              </authorizationMap>
+            </map>
+          </authorizationPlugin>
+<% end -%>
+        </plugins>
+
+        <systemUsage>
+            <systemUsage>
+                <memoryUsage>
+                    <memoryUsage limit="<%= @memoryUsage %>"/>
+                </memoryUsage>
+                <storeUsage>
+                    <storeUsage limit="<%= @storeUsage %>"/>
+                </storeUsage>
+                <tempUsage>
+                    <tempUsage limit="<%= @tempUsage %>"/>
+                </tempUsage>
+            </systemUsage>
+        </systemUsage>
+
+<% if @ssl_enabled_real -%>
+        <sslContext>
+            <sslContext keyStore="file:<%= @ssl_keystore %>"
+                        keyStorePassword="<%= @ssl_keystore_password %>"
+                        keyStoreKeyPassword="<%= @ssl_keystore_key_password %>"
+                        trustStore="file:<%= @ssl_truststore %>"
+                        trustStorePassword="<%= @ssl_truststore_password %>" />
+        </sslContext>
+<% end -%>
+
+        <transportConnectors>
+<% for @transport_connector.each |name,uri| do -%>
+            <transportConnector name="<%= name %>" uri="<%= uri %>"/>
+<% end -%>
+        </transportConnectors>
+
+        <shutdownHooks>
+            <bean xmlns="http://www.springframework.org/schema/beans" class="org.apache.activemq.hooks.SpringContextHook" />
+        </shutdownHooks>
+
+    <destinations>
+<% @destinations.each do |destination,value| -%>
+      <<%= value['type'] %> physicalName="<%= destination  %>"/>
+<% end -%>
+    </destinations>
+
+  </broker>
+
+<% if @persistence_adapter_real == 'jdbc' -%>
+<% if @persistence_db_type == 'mysql' -%>
+    <bean id="mysql-ds" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="<%= @persistence_db_url %>"/>
+        <property name="username" value="<%= @persistence_db_username %>"/>
+        <property name="password" value="<%= @persistence_db_password %>"/>
+        <property name="maxActive" value="200"/>
+        <property name="poolPreparedStatements" value="true"/>
+    </bean>
+<% elsif @persistence_db_type == 'oracle' -%>
+    <bean id="oracle-ds" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url" value="<%= @persistence_db_url %>"/>
+        <property name="username" value="<%= @persistence_db_username %>"/>
+        <property name="password" value="<%= @persistence_db_password %>"/>
+        <property name="maxActive" value="200"/>
+        <property name="poolPreparedStatements" value="true"/>
+    </bean>
+<% end -%>
+<% end -%>
+
+<% if @webconsole_real -%>
+    <import resource="jetty.xml"/>
+<% end -%>
+
+<% if @optional_config -%>
+<% @optional_config.each do |config| -%>
+      <import resource="<%= config %>"/>
+<% end -%>
+<% end -%>
+
+</beans>
+
