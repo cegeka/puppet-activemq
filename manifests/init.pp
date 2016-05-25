@@ -103,7 +103,7 @@ class activemq(
     ensure => $ensure_real
   }
 
-  Anchor['activemq::begin'] -> Class['Activemq::Preconfig'] -> Class['Activemq::Package']
+  Anchor['activemq::begin'] -> Class['Activemq::Package'] -> Class['Activemq::Preconfig']
     -> Class['Activemq::Config'] ~> Class['Activemq::Service'] -> Anchor['activemq::end']
 
 }
