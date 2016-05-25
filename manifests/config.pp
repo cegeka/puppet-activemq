@@ -1,6 +1,11 @@
 class activemq::config(
   $version = undef,
   $optional_config = undef,
+  $advisorysupport = undef,
+  $selectoraware = undef,
+  $managementcontext_createconnector = undef,
+  $transport_connector = undef,
+  $users = undef,
   $persistence_db_driver_version = '6'
 ){
 
