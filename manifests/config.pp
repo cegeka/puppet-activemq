@@ -19,6 +19,18 @@ class activemq::config(
     require => File['/data/activemq']
   }
 
+  case $::osfamily {
+    'RedHat': {
+      if $::operatingsystemmajrelease < 7 {
+        file { '/etc/init.d/activemq':
+          ensure  => file,
+          mode    => '0755',
+          content => template("${module_name}/init/activemq"),
+        }
+      }
+    }
+  }
+
   file { '/etc/activemq/activemq-wrapper.conf':
     ensure  => file,
     mode    => '0644',

@@ -22,16 +22,4 @@ class activemq::package(
     default: { fail('Class[Activemq::Package]: parameter versionlock must be true or false') }
   }
 
-  case $::osfamily {
-    'RedHat': {
-      if $::operatingsystemmajrelease < 7 {
-        file { '/etc/init.d/activemq':
-          ensure  => file,
-          mode    => '0755',
-          content => template("${module_name}/init/activemq"),
-        }
-      }
-    }
-  }
-
 }

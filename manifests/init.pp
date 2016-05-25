@@ -83,6 +83,7 @@ class activemq(
   $webconsole_real = $webconsole
 
   class { 'activemq::preconfig':
+    version     => $version_real,
     optional_config => $optional_config
   }
 
