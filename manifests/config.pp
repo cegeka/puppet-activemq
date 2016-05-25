@@ -1,5 +1,6 @@
 class activemq::config(
   $version = undef,
+  $optional_config = undef,
   $persistence_db_driver_version = '6'
 ){
 
