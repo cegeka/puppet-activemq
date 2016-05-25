@@ -130,7 +130,7 @@
 <% end -%>
 
         <transportConnectors>
-<% for @transport_connector.each |name,uri| do -%>
+<% @transport_connector.each |name,uri| do -%>
             <transportConnector name="<%= name %>" uri="<%= uri %>"/>
 <% end -%>
         </transportConnectors>
