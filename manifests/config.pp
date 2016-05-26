@@ -5,20 +5,23 @@ class activemq::config(
   $selectoraware = undef,
   $managementcontext_createconnector = undef,
   $transport_connector = undef,
+  $data_dir = '/data/activemq',
   $users = undef,
+  $destinations = undef,
+  $sysconfig_options = undef,
   $persistence_db_driver_version = '6'
 ){
 
   $major_version_withoutrelease = regsubst($version, '^(\d+\.\d+)\.\d+-.*$','\1')
   notice("major_version_withoutrelease=${major_version_withoutrelease}")
 
-  file { '/data/activemq':
+  file { $data_dir:
     ensure => directory,
     owner  => 'activemq',
     group  => 'activemq'
   }
 
-  file { '/data/activemq/heapdumps':
+  file { "${data_dir}/heapdumps":
     ensure  => directory,
     owner   => 'activemq',
     group   => 'activemq',
@@ -39,6 +42,13 @@ class activemq::config(
 
   file { '/etc/activemq':
     ensure => directory
+  }
+
+  file { '/etc/sysconfig/activemq':
+    ensure  => file,
+    mode    => '0644',
+    content => template("${module_name}/v${major_version_withoutrelease}/activemq.sysconfig.erb"),
+    notify  => Class['activemq::service']
   }
 
   file { '/etc/activemq/activemq.xml':
