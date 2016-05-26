@@ -118,9 +118,9 @@ class activemq(
     selectoraware                     => $selectoraware_real,
     managementcontext_createconnector => $managementcontext_createconnector_real,
     transport_connector               => $transport_connector_real,
-    users                             => $users_real
-    destinations                      => $destinations_real
-    sysconfig_options                 => $sysconfig_options_real
+    users                             => $users_real,
+    destinations                      => $destinations_real,
+    sysconfig_options                 => $sysconfig_options_real,
   }
 
   class { 'activemq::service':
