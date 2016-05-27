@@ -15,6 +15,7 @@ describe 'activemq' do
         class { '::activemq':
           version           => '5.10.0-2.cgk.el6',
           data_dir          => '/usr/share/activemq/data',
+          heap_dump_path    => '/usr/shared/activemq/data/heapdumps',
           manage_config     => true,
           sysconfig_options => {
             'ACTIVEMQ_OPTION1' => 'VALUE1'

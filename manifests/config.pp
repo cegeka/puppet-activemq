@@ -5,11 +5,11 @@ class activemq::config(
   $selectoraware = undef,
   $managementcontext_createconnector = undef,
   $transport_connector = undef,
-  $data_dir = '/data/activemq',
+  $data_dir = undef,
   $users = undef,
   $destinations = undef,
   $sysconfig_options = undef,
-  $persistence_db_driver_version = '6',
+  $persistence_db_driver_version = undef,
   $manage_config = undef
 ){
 

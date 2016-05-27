@@ -116,6 +116,7 @@ class activemq(
   class { 'activemq::config':
     version                           => $version_real,
     optional_config                   => $optional_config,
+    data_dir                          => $data_dir,
     persistence_db_driver_version     => $persistence_db_driver_version_real,
     advisorysupport                   => $advisorysupport_real,
     selectoraware                     => $selectoraware_real,
