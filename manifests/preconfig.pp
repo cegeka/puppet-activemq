@@ -14,7 +14,7 @@ class activemq::preconfig (
   file { '/etc/activemq/activemq.xml':
     ensure  => file,
     mode    => '0644',
-    content => template("${module_name}/${version_real}/activemq.xml.erb"),
+    content => template("${module_name}/v${version_real}/activemq.xml.erb"),
     replace => false,
     notify  => Class['activemq::service'],
     require => File['/etc/activemq']
