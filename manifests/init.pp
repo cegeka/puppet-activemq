@@ -57,7 +57,8 @@ class activemq(
   $users = {},
   $destinations = {},
   $sysconfig_options = {},
-  $optional_config = undef
+  $optional_config = undef,
+  $manage_config = false
 ) {
 
   include stdlib
@@ -79,6 +80,7 @@ class activemq(
   validate_bool($webconsole)
   validate_bool($scheduler_support_enabled)
   validate_bool($selectoraware)
+  validate_bool($manage_config)
   validate_hash($transport_connector)
   validate_hash($users)
   validate_hash($destinations)
@@ -102,6 +104,7 @@ class activemq(
   $users_real = $users
   $destinations_real = $destinations
   $sysconfig_options_real = $sysconfig_options
+  $manage_config_real = $manage_config
 
   class { 'activemq::package':
     package     => $package,
@@ -121,6 +124,7 @@ class activemq(
     users                             => $users_real,
     destinations                      => $destinations_real,
     sysconfig_options                 => $sysconfig_options_real,
+    manage_config                     => $manage_config_real
   }
 
   class { 'activemq::service':

@@ -9,7 +9,8 @@ class activemq::config(
   $users = undef,
   $destinations = undef,
   $sysconfig_options = undef,
-  $persistence_db_driver_version = '6'
+  $persistence_db_driver_version = '6',
+  $manage_config = undef
 ){
 
   $major_version_withoutrelease = regsubst($version, '^(\d+\.\d+)\.\d+-.*$','\1')
@@ -55,7 +56,7 @@ class activemq::config(
     ensure  => file,
     mode    => '0644',
     content => template("${module_name}/v${major_version_withoutrelease}/activemq.xml.erb"),
-    replace => false,
+    replace => $manage_config,
     notify  => Class['activemq::service'],
     require => File['/etc/activemq']
   }
