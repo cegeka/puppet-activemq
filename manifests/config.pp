@@ -26,7 +26,6 @@ class activemq::config(
     ensure  => directory,
     owner   => 'activemq',
     group   => 'activemq',
-    require => File['/data/activemq']
   }
 
   case $::osfamily {

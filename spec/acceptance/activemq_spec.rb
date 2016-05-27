@@ -12,12 +12,13 @@ describe 'activemq' do
           ensure => installed
         }
 
-        $sysconfig_hash = { 'ACTIVEMQ_OPTION1' => 'VALUE1' }
         class { '::activemq':
           version           => '5.10.0-2.cgk.el6',
           data_dir          => '/usr/share/activemq/data',
           manage_config     => true,
-          sysconfig_options => $sysconfig_hash
+          sysconfig_options => {
+            'ACTIVEMQ_OPTION1' => 'VALUE1'
+          }
         }
       EOS
 
