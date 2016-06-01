@@ -59,7 +59,7 @@ class activemq(
   $destinations = {},
   $sysconfig_options = {},
   $log4j_properties = {
-    'log4j.rootLogger' => 'INFO, console',
+    'log4j.rootLogger'                                => 'INFO, console',
     'log4j.logger.org.apache.activemq.spring'         => 'WARN',
     'log4j.logger.org.apache.activemq.web.handler'    => 'WARN',
     'log4j.logger.org.springframework'                => 'WARN',
@@ -86,7 +86,7 @@ class activemq(
     'log4j.appender.audit.maxBackupIndex'             => '5',
     'log4j.appender.audit.append'                     => 'true',
     'log4j.appender.audit.layout'                     => 'org.apache.log4j.PatternLayout',
-    'log4j.appender.audit.layout.ConversionPattern'   => '%-5p | %m | %t%n',
+    'log4j.appender.audit.layout.ConversionPattern'   => '%-5p | %m | %t%n'
   },
   $optional_config = undef,
   $manage_config = false
