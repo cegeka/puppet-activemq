@@ -3,6 +3,6 @@
 # ActiveMQ log4j logging settings
 #
 
-<% @log4j_properties.each do |key,value| -%>
+<% @log4j_properties.sort.each do |key,value| -%>
 <%= key %>=<%= value %>
 <% end -%>

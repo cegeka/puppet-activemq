@@ -4,6 +4,6 @@
 # Check /usr/share/activemq/bin/env for default values
 #
 
-<% @sysconfig_options.each do |key,value| -%>
+<% @sysconfig_options.sort.each do |key,value| -%>
 <%= key %>="<%= value %>"
 <% end -%>
