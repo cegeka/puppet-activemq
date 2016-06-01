@@ -16,6 +16,7 @@ class activemq(
   $versionlock = false,
   $ensure = 'running',
   $data_dir = '/data/activemq',
+  $data_dir_tmp = "${data_dir}/tmp",
   $scheduler_support_enabled = false,
   $persistence_adapter = 'kahadb',
   $persistence_db_type = 'derby',
@@ -57,6 +58,36 @@ class activemq(
   $users = {},
   $destinations = {},
   $sysconfig_options = {},
+  $log4j_properties = {
+    'log4j.rootLogger' => 'INFO, console',
+    'log4j.logger.org.apache.activemq.spring'         => 'WARN',
+    'log4j.logger.org.apache.activemq.web.handler'    => 'WARN',
+    'log4j.logger.org.springframework'                => 'WARN',
+    'log4j.logger.org.apache.xbean'                   => 'WARN',
+    'log4j.logger.org.apache.camel'                   => 'INFO',
+    'log4j.logger.org.eclipse.jetty'                  => 'WARN',
+    'log4j.appender.console'                          => 'org.apache.log4j.ConsoleAppender',
+    'log4j.appender.console.layout'                   => 'org.apache.log4j.PatternLayout',
+    'log4j.appender.console.layout.ConversionPattern' => '%5p | %m%n',
+    'log4j.appender.console.threshold'                => 'INFO',
+    'log4j.appender.logfile'                          => 'org.apache.log4j.RollingFileAppender',
+    'log4j.appender.logfile.file'                     => '${activemq.base}/log/activemq.log',
+    'log4j.appender.logfile.maxFileSize'              => '10240KB',
+    'log4j.appender.logfile.maxBackupIndex'           => '10',
+    'log4j.appender.logfile.append'                   => 'true',
+    'log4j.appender.logfile.layout'                   => 'org.apache.log4j.PatternLayout',
+    'log4j.appender.logfile.layout.ConversionPattern' => '%d | %-5p | %m | %c | %t%n',
+    'log4j.throwableRenderer'                         => 'org.apache.log4j.EnhancedThrowableRenderer',
+    'log4j.additivity.org.apache.activemq.audit'      => 'false',
+    'log4j.logger.org.apache.activemq.audit'          => 'INFO, console',
+    'log4j.appender.audit'                            => 'org.apache.log4j.RollingFileAppender',
+    'log4j.appender.audit.file'                       => '${activemq.base}/data/audit.log',
+    'log4j.appender.audit.maxFileSize'                => '1024KB',
+    'log4j.appender.audit.maxBackupIndex'             => '5',
+    'log4j.appender.audit.append'                     => 'true',
+    'log4j.appender.audit.layout'                     => 'org.apache.log4j.PatternLayout',
+    'log4j.appender.audit.layout.ConversionPattern'   => '%-5p | %m | %t%n',
+  },
   $optional_config = undef,
   $manage_config = false
 ) {
@@ -85,6 +116,7 @@ class activemq(
   validate_hash($users)
   validate_hash($destinations)
   validate_hash($sysconfig_options)
+  validate_hash($log4j_properties)
 
   $version_real = $version
   $versionlock_real = $versionlock
@@ -104,6 +136,7 @@ class activemq(
   $users_real = $users
   $destinations_real = $destinations
   $sysconfig_options_real = $sysconfig_options
+  $log4j_properties_real = $log4j_properties
   $manage_config_real = $manage_config
 
   class { 'activemq::package':
@@ -117,6 +150,7 @@ class activemq(
     version                           => $version_real,
     optional_config                   => $optional_config,
     data_dir                          => $data_dir,
+    data_dir_tmp                      => $data_dir_tmp,
     persistence_db_driver_version     => $persistence_db_driver_version_real,
     advisorysupport                   => $advisorysupport_real,
     selectoraware                     => $selectoraware_real,
@@ -125,6 +159,7 @@ class activemq(
     users                             => $users_real,
     destinations                      => $destinations_real,
     sysconfig_options                 => $sysconfig_options_real,
+    log4j_properties                  => $log4j_properties_real,
     manage_config                     => $manage_config_real
   }
 

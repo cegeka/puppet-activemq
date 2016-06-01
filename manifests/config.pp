@@ -6,9 +6,11 @@ class activemq::config(
   $managementcontext_createconnector = undef,
   $transport_connector = undef,
   $data_dir = undef,
+  $data_dir_tmp = undef,
   $users = undef,
   $destinations = undef,
   $sysconfig_options = undef,
+  $log4j_properties = undef,
   $persistence_db_driver_version = undef,
   $manage_config = undef
 ){
@@ -17,6 +19,12 @@ class activemq::config(
   notice("major_version_withoutrelease=${major_version_withoutrelease}")
 
   file { $data_dir:
+    ensure => directory,
+    owner  => 'activemq',
+    group  => 'activemq'
+  }
+
+  file { $data_dir_tmp:
     ensure => directory,
     owner  => 'activemq',
     group  => 'activemq'
@@ -49,6 +57,14 @@ class activemq::config(
     mode    => '0644',
     content => template("${module_name}/v${major_version_withoutrelease}/activemq.sysconfig.erb"),
     notify  => Class['activemq::service']
+  }
+
+  file { '/etc/activemq/log4j.properties':
+    ensure  => file,
+    mode    => '0644',
+    content => template("${module_name}/v${major_version_withoutrelease}/log4j.properties.erb"),
+    notify  => Class['activemq::service']
+    require => File['/etc/activemq']
   }
 
   file { '/etc/activemq/activemq.xml':
