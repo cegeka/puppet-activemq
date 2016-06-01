@@ -63,7 +63,7 @@ class activemq::config(
     ensure  => file,
     mode    => '0644',
     content => template("${module_name}/v${major_version_withoutrelease}/log4j.properties.erb"),
-    notify  => Class['activemq::service']
+    notify  => Class['activemq::service'],
     require => File['/etc/activemq']
   }
 
