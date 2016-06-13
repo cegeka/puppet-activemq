@@ -13,12 +13,12 @@ class activemq::package(
   # if the activemq database resides on a NFS share
   group { 'activemq':
     ensure => 'present',
-    gid    => '94',
+    gid    => '92',
   }
   user { 'activemq':
     ensure           => 'present',
-    uid              => '94',
-    gid              => '94',
+    uid              => '92',
+    gid              => '92',
     home             => '/usr/share/activemq',
     managehome       => 'false',
     password         => '!!',
