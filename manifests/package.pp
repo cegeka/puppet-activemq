@@ -8,8 +8,26 @@ class activemq::package(
 
   $version_real = $version
 
+  # create activemq user and group
+  # we might need the same uid and gid on different servers
+  # if the activemq database resides on a NFS share
+  group { 'activemq':
+    ensure => 'present',
+    gid    => '94',
+  }
+  user { 'activemq':
+    ensure           => 'present',
+    uid              => '94',
+    gid              => '94',
+    home             => '/usr/share/activemq',
+    managehome       => 'false',
+    password         => '',
+    shell            => '/bin/bash',
+  }
+
   package { $package :
-    ensure  => $version_real
+    ensure  => $version_real,
+    require => User['activemq'],
   }
 
   case $versionlock {
