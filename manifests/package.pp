@@ -21,7 +21,7 @@ class activemq::package(
     gid              => '94',
     home             => '/usr/share/activemq',
     managehome       => 'false',
-    password         => '',
+    password         => '!!',
     shell            => '/bin/bash',
   }
 
