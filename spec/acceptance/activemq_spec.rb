@@ -23,10 +23,14 @@ describe 'activemq' do
         }
       EOS
 
-      # Run it twice 
+      # Run it twice
       apply_manifest(pp, :catch_failures => true)
       # and test for idempotency
       apply_manifest(pp, :catch_changes => true)
+    end
+
+    describe service('activemq') do
+      it { should be_running }
     end
 
     describe file '/etc/activemq/activemq.xml' do
@@ -41,4 +45,3 @@ describe 'activemq' do
 
   end
 end
-
