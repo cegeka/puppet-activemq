@@ -16,7 +16,6 @@ class activemq::config(
 ){
 
   $major_version_withoutrelease = regsubst($version, '^(\d+\.\d+)\.\d+-.*$','\1')
-  notice("major_version_withoutrelease=${major_version_withoutrelease}")
 
   file { $data_dir:
     ensure => directory,
