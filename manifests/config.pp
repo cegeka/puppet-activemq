@@ -30,9 +30,9 @@ class activemq::config(
   }
 
   file { "${data_dir}/heapdumps":
-    ensure  => directory,
-    owner   => 'activemq',
-    group   => 'activemq',
+    ensure => directory,
+    owner  => 'activemq',
+    group  => 'activemq',
   }
 
   case $::osfamily {
@@ -45,6 +45,7 @@ class activemq::config(
         }
       }
     }
+    default: { notice('Only Redhat is supported') }
   }
 
   file { '/etc/activemq':
