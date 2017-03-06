@@ -1,5 +1,6 @@
 class activemq::service(
-  $ensure = 'running'
+  $ensure = 'running',
+  $enabled = false
 ) {
 
   $v_ensure = [ '^running$', '^stopped$' ]
@@ -9,6 +10,7 @@ class activemq::service(
 
   service { 'activemq':
     ensure     => $ensure_real,
+    enabled    => $enabled,
     hasstatus  => true,
     hasrestart => true,
     require    => Class['activemq::package'],

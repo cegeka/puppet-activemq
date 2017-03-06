@@ -15,6 +15,7 @@ class activemq(
   $version = undef,
   $versionlock = false,
   $ensure = 'running',
+  $enabled = false,
   $data_dir = '/data/activemq',
   $data_dir_tmp = "${data_dir}/tmp",
   $scheduler_support_enabled = false,
@@ -105,6 +106,7 @@ class activemq(
   validate_re($persistence_db_driver_version, '^6$|^7$')
   validate_re($advisorysupport, '^false$|^true$')
   validate_re($managementcontext_createconnector, '^false$|^true$')
+  validate_bool($enabled)
   validate_bool($mqtt_enabled)
   validate_bool($mqtt_ssl_enabled)
   validate_bool($ssl_enabled)
@@ -121,6 +123,7 @@ class activemq(
   $version_real = $version
   $versionlock_real = $versionlock
   $ensure_real = $ensure
+  $enabled_real = $enabled
   $persistence_adapter_real = $persistence_adapter
   $persistence_db_type_real = $persistence_db_type
   $persistence_db_driver_version_real = $persistence_db_driver_version
@@ -164,7 +167,8 @@ class activemq(
   }
 
   class { 'activemq::service':
-    ensure => $ensure_real
+    ensure  => $ensure_real,
+    enabled => $enabled_real
   }
 
   Anchor['activemq::begin'] -> Class['Activemq::Package']
