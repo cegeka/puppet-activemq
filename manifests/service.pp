@@ -10,7 +10,7 @@ class activemq::service(
 
   service { 'activemq':
     ensure     => $ensure_real,
-    enabled    => $enabled,
+    enable     => $enabled,
     hasstatus  => true,
     hasrestart => true,
     require    => Class['activemq::package'],
