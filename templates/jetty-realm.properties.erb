@@ -19,7 +19,7 @@
 # username: password [,rolename ...]
 <%- @webconsole_users.each do |user_entry| -%>
 <%- if user_entry.has_key?('role') -%>
-<%= user_entry['username'] %>: <%= user_entry['password'] %>, <%= user_entry['role'].to_a.join(", ") %>
+<%= user_entry['username'] %>: <%= user_entry['password'] %>, <%= user_entry['role'].join(", ") %>
 <%- else -%>
 <%= user_entry['username'] %>: <%= user_entry['password'] %>
 <%- end -%>

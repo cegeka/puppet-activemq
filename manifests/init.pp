@@ -37,10 +37,10 @@ class activemq(
   $webconsole_users = [
     { 'username' => 'admin',
       'password' => 'admin',
-      'role'     => 'admin' },
+      'role'     => ['admin'] },
     { 'username' => 'user',
       'password' => 'user',
-      'role'     => 'user' }
+      'role'     => ['user'] }
   ],
   $jmx_enabled=false,
   $jmx_remote_port='1616',
