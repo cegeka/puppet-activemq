@@ -1,5 +1,5 @@
 = puppet-activemq module
 
-{<img src='https://codex.cegeka.be/jenkins/job/puppet-activemq/badge/icon' />}[https://codex.cegeka.be/jenkins/job/puppet-activemq/]
+{<img src='https://jenkins-iac.cegeka.be/job/puppet-activemq/badge/icon' />}[https://jenkins-iac.cegeka.be/job/puppet-activemq/]
 
 This is the activemq module.
