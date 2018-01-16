@@ -37,7 +37,7 @@ class activemq::config(
 
   case $::osfamily {
     'RedHat': {
-      if $::operatingsystemmajrelease < 7 {
+      if versioncmp($::operatingsystemmajrelease, '7') < 0 {
         file { '/etc/init.d/activemq':
           ensure  => file,
           mode    => '0755',
