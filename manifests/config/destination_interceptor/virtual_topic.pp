@@ -1,5 +1,5 @@
 define activemq::config::destination_interceptor::virtual_topic(
-  $name = undef,
+  $topic_name = undef,
   $prefix = undef,
   $ensure = present
 ) {
@@ -18,7 +18,7 @@ define activemq::config::destination_interceptor::virtual_topic(
     }
     'present':
     {
-      if (name == undef or prefix == undef) {
+      if ($topic_name == undef or $prefix == undef) {
         fail("Activemq::Config::DestinationInterceptor::VirtualTopic[${title}]: parameters name and prefix must be defined")
       }
 
@@ -29,10 +29,10 @@ define activemq::config::destination_interceptor::virtual_topic(
         incl    => "/etc/activemq/activemq.xml",
         context => "/files/etc/activemq/activemq.xml/beans/broker",
         changes => [
-          "set destinationInterceptors/virtualDestinationInterceptor/virtualDestinations/virtualTopic[last()+1]/#attribute/name ${name}",
+          "set destinationInterceptors/virtualDestinationInterceptor/virtualDestinations/virtualTopic[last()+1]/#attribute/name ${topic_name}",
           "set destinationInterceptors/virtualDestinationInterceptor/virtualDestinations/virtualTopic[last()]/#attribute/prefix ${prefix}",
         ],
-        onlyif  => "match destinationInterceptors/virtualDestinationInterceptor/virtualDestinations/virtualTopic/#attribute/name[. =\"${name}\"] size == 0",
+        onlyif  => "match destinationInterceptors/virtualDestinationInterceptor/virtualDestinations/virtualTopic/#attribute/name[. =\"${topic_name}\"] size == 0",
         require => Augeas["virtual_topic/${title}/rm"],
         notify  => Class['activemq::service']
       }
@@ -45,9 +45,9 @@ define activemq::config::destination_interceptor::virtual_topic(
     incl    => "/etc/activemq/activemq.xml",
     context => "/files/etc/activemq/activemq.xml/beans/broker",
     changes => [
-      "rm destinationInterceptors/virtualDestinationInterceptor/virtualDestinations/virtualTopic[.][#attribute/name = ${name}]",
+      "rm destinationInterceptors/virtualDestinationInterceptor/virtualDestinations/virtualTopic[.][#attribute/name = ${topic_name}]",
     ],
-    onlyif  => "match destinationInterceptors/virtualDestinationInterceptor/virtualDestinations/virtualTopic/#attribute/name[. =\"${name}\"] size > 0",
+    onlyif  => "match destinationInterceptors/virtualDestinationInterceptor/virtualDestinations/virtualTopic/#attribute/name[. =\"${topic_name}\"] size > 0",
     require => File["/etc/activemq/activemq.xml"],
     notify  => Class['activemq::service']
   }
