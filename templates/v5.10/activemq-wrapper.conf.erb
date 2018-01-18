@@ -76,10 +76,10 @@ wrapper.java.additional.10=-XX:HeapDumpPath=<%= scope['activemq::heap_dump_path'
 # Uncomment to enable jmx
 <% if scope['activemq::jmx_enabled'] -%>
 wrapper.java.additional.11=-Dcom.sun.management.jmxremote.ssl=false
-wrapper.java.additional.12=-Dcom.sun.management.jmxremote.port=<%= @jmx_remote_port %>
-wrapper.java.additional.13=-Dcom.sun.management.jmxremote.rmi.port=<%= @jmx_remote_rmi_port %>
-wrapper.java.additional.14=-Dcom.sun.management.jmxremote.authenticate=<%= @jmx_authentication_enabled %>
-<% if @jmx_authentication_enabled -%>
+wrapper.java.additional.12=-Dcom.sun.management.jmxremote.port=<%= scope['activemq::jmx_remote_port'] %>
+wrapper.java.additional.13=-Dcom.sun.management.jmxremote.rmi.port=<%= scope['activemq::jmx_remote_rmi_port'] %>
+wrapper.java.additional.14=-Dcom.sun.management.jmxremote.authenticate=<%= scope['activemq::jmx_authentication_enabled']  %>
+<% if scope['activemq::jmx_authentication_enabled'] -%>
 wrapper.java.additional.15=-Dcom.sun.management.jmxremote.password.file=/etc/activemq/jmxremote.password
 wrapper.java.additional.16=-Dcom.sun.management.jmxremote.access.file=/etc/activemq/jmxremote.access
 <% end -%>
