@@ -32,10 +32,10 @@ class activemq::package(
 
   case $versionlock {
     true: {
-      packagelock { $package : }
+      yum::versionlock { "0:${package}-${version}.*" : }
     }
     false: {
-      packagelock { $package : ensure => absent }
+      yum::versionlock { "0:${package}-${version}.*" : ensure => absent }
     }
     default: { fail('Class[Activemq::Package]: parameter versionlock must be true or false') }
   }
