@@ -8,6 +8,11 @@ class activemq::package(
 
   $version_real = $version
 
+  $bool_versionlock = $versionlock ? {
+    true  => 'present',
+    false => 'absent',
+  }
+
   # create activemq user and group
   # we might need the same uid and gid on different servers
   # if the activemq database resides on a NFS share
@@ -16,13 +21,13 @@ class activemq::package(
     gid    => '92',
   }
   user { 'activemq':
-    ensure           => 'present',
-    uid              => '92',
-    gid              => '92',
-    home             => '/usr/share/activemq',
-    managehome       => 'false',
-    password         => '!!',
-    shell            => '/bin/bash',
+    ensure     => 'present',
+    uid        => '92',
+    gid        => '92',
+    home       => '/usr/share/activemq',
+    managehome => 'false',
+    password   => '!!',
+    shell      => '/bin/bash',
   }
 
   package { $package :
@@ -30,28 +35,23 @@ class activemq::package(
     require => User['activemq'],
   }
 
-  case $versionlock {
-    true: {
-      case $::operatingsystemmajrelease {
-        '8':{
-          dnf::versionlock { "0:${package}-${version}.*": }
-        }
-        default: {
-          yum::versionlock { "0:${package}-${version}.*": }
-        }
-      }
-    }
-    false: {
-      case $::operatingsystemmajrelease {
-        '8':{
-          dnf::versionlock { "0:${package}-${version}.*": ensure => absent }
-        }
-        default: {
-          yum::versionlock { "0:${package}-${version}.*": ensure => absent }
+
+  case $::operatingsystemmajrelease {
+    '8':{
+      if $version_real =~ /(\d+\.\d+\.\d+)-(\d+.\w+.*)/ { # filter out version & release as capture groups
+        yum::versionlock { $package:
+          ensure  => $bool_versionlock,
+          version => $1,
+          release => $2,
+          epoch   => 0,
         }
       }
     }
-    default: { fail('Class[Activemq::Package]: parameter versionlock must be true or false') }
+    default: {
+      yum::versionlock { "0:${package}-${version}.*":
+        ensure => $bool_versionlock
+      }
+    }
   }
 
 }
