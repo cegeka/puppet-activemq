@@ -89,6 +89,7 @@ class activemq(
     'log4j.appender.audit.layout'                     => 'org.apache.log4j.PatternLayout',
     'log4j.appender.audit.layout.ConversionPattern'   => '%-5p | %m | %t%n',
   },
+  $log4j2_properties = {},
   $optional_config = undef,
   $manage_config = false
 ) {
@@ -119,6 +120,7 @@ class activemq(
   validate_hash($destinations)
   validate_hash($sysconfig_options)
   validate_hash($log4j_properties)
+  validate_hash($log4j2_properties)
 
   $version_real = $version
   $versionlock_real = $versionlock
@@ -140,6 +142,7 @@ class activemq(
   $destinations_real = $destinations
   $sysconfig_options_real = $sysconfig_options
   $log4j_properties_real = $log4j_properties
+  $log4j2_properties_real = $log4j2_properties
   $manage_config_real = $manage_config
 
   class { 'activemq::package':
@@ -163,6 +166,7 @@ class activemq(
     destinations                      => $destinations_real,
     sysconfig_options                 => $sysconfig_options_real,
     log4j_properties                  => $log4j_properties_real,
+    log4j2_properties                 => $log4j2_properties_real,
     manage_config                     => $manage_config_real
   }
 

@@ -11,6 +11,7 @@ class activemq::config(
   $destinations = undef,
   $sysconfig_options = undef,
   $log4j_properties = undef,
+  $log4j2_properties = undef,
   $persistence_db_driver_version = undef,
   $manage_config = undef
 ){
@@ -59,13 +60,24 @@ class activemq::config(
     notify  => Class['activemq::service']
   }
 
-  file { '/etc/activemq/log4j.properties':
-    ensure  => file,
-    mode    => '0644',
-    content => template("${module_name}/v${major_version_withoutrelease}/log4j.properties.erb"),
-    notify  => Class['activemq::service'],
-    require => File['/etc/activemq']
+  if empty($log4j2_properties) {
+    file { '/etc/activemq/log4j.properties':
+      ensure  => file,
+      mode    => '0644',
+      content => template("${module_name}/v${major_version_withoutrelease}/log4j.properties.erb"),
+      notify  => Class['activemq::service'],
+      require => File['/etc/activemq']
+    }
+  } else {
+    file { '/etc/activemq/log4j2.properties':
+      ensure  => file,
+      mode    => '0644',
+      content => template("${module_name}/v${major_version_withoutrelease}/log4j2.properties.erb"),
+      notify  => Class['activemq::service'],
+      require => File['/etc/activemq']
+    }
   }
+
 
   file { '/etc/activemq/activemq.xml':
     ensure  => file,
