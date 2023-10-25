@@ -78,7 +78,6 @@ class activemq::config(
     }
   }
 
-
   file { '/etc/activemq/activemq.xml':
     ensure  => file,
     mode    => '0644',
