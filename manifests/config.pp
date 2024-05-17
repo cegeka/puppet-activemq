@@ -13,7 +13,8 @@ class activemq::config(
   $log4j_properties = undef,
   $log4j2_properties = undef,
   $persistence_db_driver_version = undef,
-  $manage_config = undef
+  $manage_config = undef,
+  $manage_users = undef
 ){
 
   $major_version_withoutrelease = regsubst($version, '^(\d+\.\d+)\.\d+-.*$','\1')
@@ -94,11 +95,13 @@ class activemq::config(
     notify  => Class['activemq::service']
   }
 
-  file { '/etc/activemq/jetty-realm.properties':
-    ensure  => file,
-    mode    => '0644',
-    content => template("${module_name}/jetty-realm.properties.erb"),
-    notify  => Class['activemq::service']
+  if ($manage_users) {
+    file { '/etc/activemq/jetty-realm.properties':
+      ensure  => file,
+      mode    => '0644',
+      content => template("${module_name}/jetty-realm.properties.erb"),
+      notify  => Class['activemq::service']
+    }
   }
 
   file { "/usr/share/activemq/lib/ojdbc${persistence_db_driver_version}.jar":
