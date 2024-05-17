@@ -34,7 +34,7 @@ class activemq(
   $ssl_truststore = undef,
   $ssl_truststore_password = undef,
   $webconsole = true,
-  $manage_users = true,
+  $manage_webusers = true,
   $webconsole_users = [
     { 'username' => 'admin',
       'password' => 'admin',
@@ -112,7 +112,7 @@ class activemq(
   validate_bool($mqtt_enabled)
   validate_bool($mqtt_ssl_enabled)
   validate_bool($ssl_enabled)
-  validate_bool($manage_users)
+  validate_bool($manage_webusers)
   validate_bool($webconsole)
   validate_bool($scheduler_support_enabled)
   validate_bool($selectoraware)
@@ -135,7 +135,7 @@ class activemq(
   $mqtt_ssl_enabled_real = $mqtt_ssl_enabled
   $scheduler_support_enabled_real = $scheduler_support_enabled
   $ssl_enabled_real = $ssl_enabled
-  $manage_users_real = $manage_users
+  $manage_webusers_real = $manage_webusers
   $webconsole_real = $webconsole
   $advisorysupport_real = $advisorysupport
   $selectoraware_real = $selectoraware
@@ -171,7 +171,7 @@ class activemq(
     log4j_properties                  => $log4j_properties_real,
     log4j2_properties                 => $log4j2_properties_real,
     manage_config                     => $manage_config_real,
-    manage_users                      => $manage_users_real
+    manage_webusers                   => $manage_webusers_real
   }
 
   class { 'activemq::service':
