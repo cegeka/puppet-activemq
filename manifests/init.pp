@@ -105,7 +105,7 @@ class activemq(
   validate_re($ensure, '^running$|^stopped$')
   validate_re($persistence_adapter, '^kahadb$|^jdbc$')
   validate_re($persistence_db_type, '^derby$|^mysql$|^oracle$')
-  validate_re($persistence_db_driver_version, '^6$|^7$')
+  validate_re($persistence_db_driver_version, '^6$|^7$|^8$')
   validate_re($advisorysupport, '^false$|^true$')
   validate_re($managementcontext_createconnector, '^false$|^true$')
   validate_bool($enabled)
@@ -161,6 +161,8 @@ class activemq(
     data_dir                          => $data_dir,
     data_dir_tmp                      => $data_dir_tmp,
     persistence_db_driver_version     => $persistence_db_driver_version_real,
+    persistence_db_type               => $persistence_db_type_real,
+    persistence_adapter               => $persistence_adapter_real,
     advisorysupport                   => $advisorysupport_real,
     selectoraware                     => $selectoraware_real,
     managementcontext_createconnector => $managementcontext_createconnector_real,

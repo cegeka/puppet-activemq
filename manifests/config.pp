@@ -13,6 +13,8 @@ class activemq::config(
   $log4j_properties = undef,
   $log4j2_properties = undef,
   $persistence_db_driver_version = undef,
+  $persistence_adapter = undef,
+  $persistence_db_type = undef,
   $manage_config = undef,
   $manage_webusers = undef
 ){
