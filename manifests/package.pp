@@ -36,7 +36,7 @@ class activemq::package(
   }
 
 
-  case $::operatingsystemmajrelease {
+  case $facts['os']['release']['major'] {
     '8':{
       if $version_real =~ /(\d+\.\d+\.\d+)-(\d+.\w+.*)/ { # filter out version & release as capture groups
         yum::versionlock { $package:
