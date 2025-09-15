@@ -21,6 +21,12 @@ class activemq::config(
 
   $major_version_withoutrelease = regsubst($version, '^(\d+\.\d+)\.\d+-.*$','\1')
 
+  file { '/var/run/activemq':
+    ensure => directory,
+    owner  => 'activemq',
+    group  => 'activemq'
+  }
+
   file { $data_dir:
     ensure => directory,
     owner  => 'activemq',
