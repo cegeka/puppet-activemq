@@ -29,11 +29,11 @@ define activemq::instance(
   $jmx_remote_rmi_port = $activemq::jmx_remote_rmi_port,
   $jmx_authentication_enabled = $activemq::jmx_authentication_enabled,
   $heap_dump_path = $activemq::heap_dump_path,
-  $tempUsage = $activemq::tempUsage,
-  $storeUsage = $activemq::storeUsage,
-  $memoryUsage = $activemq::memoryUsage,
-  $topic_memoryLimit = $activemq::topic_memoryLimit,
-  $queue_memoryLimit = $activemq::queue_memoryLimit,
+  $temp_usage = $activemq::temp_usage,
+  $store_usage = $activemq::store_usage,
+  $memory_usage = $activemq::memory_usage,
+  $topic_memory_limit = $activemq::topic_memory_limit,
+  $queue_memory_limit = $activemq::queue_memory_limit,
   $advisorysupport = $activemq::advisorysupport,
   $selectoraware = $activemq::selectoraware,
   $managementcontext_createconnector = $activemq::managementcontext_createconnector,
@@ -121,7 +121,7 @@ define activemq::instance(
 
     file { "/etc/systemd/system/activemq${id}.service.d":
       ensure => link,
-      target  => "/etc/systemd/system/activemq.service.d"
+      target  => '/etc/systemd/system/activemq.service.d'
     }
 
   }
