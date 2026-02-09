@@ -185,7 +185,7 @@ class activemq(
     }
 
     Anchor['activemq::begin'] -> Class['Activemq::Package']
-      -> Class['Activemq::Config'] ~> Class['Activemq::Service'] -> Anchor['activemq::end'] 
+      -> Class['Activemq::Config'] ~> Class['Activemq::Service'] -> Anchor['activemq::end']
 
   } else {
 
@@ -193,7 +193,7 @@ class activemq(
       ensure => 'present',
       gid    => '92',
     }
-  
+
     user { 'activemq':
       ensure     => 'present',
       uid        => '92',
