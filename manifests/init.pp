@@ -92,7 +92,8 @@ class activemq(
   },
   $log4j2_properties = {},
   $optional_config = undef,
-  $manage_config = false
+  $manage_config = false,
+  $use_multiple_instances = false,
 ) {
 
   include stdlib
@@ -148,40 +149,79 @@ class activemq(
   $log4j2_properties_real = $log4j2_properties
   $manage_config_real = $manage_config
 
-  class { 'activemq::package':
-    package     => $package,
-    version     => $version_real,
-    versionlock => $versionlock_real,
-    notify      => Class['activemq::service']
-  }
+  if !$use_multiple_instances {
 
-  class { 'activemq::config':
-    version                           => $version_real,
-    optional_config                   => $optional_config,
-    data_dir                          => $data_dir,
-    data_dir_tmp                      => $data_dir_tmp,
-    persistence_db_driver_version     => $persistence_db_driver_version_real,
-    persistence_db_type               => $persistence_db_type_real,
-    persistence_adapter               => $persistence_adapter_real,
-    advisorysupport                   => $advisorysupport_real,
-    selectoraware                     => $selectoraware_real,
-    managementcontext_createconnector => $managementcontext_createconnector_real,
-    transport_connector               => $transport_connector_real,
-    users                             => $users_real,
-    destinations                      => $destinations_real,
-    sysconfig_options                 => $sysconfig_options_real,
-    log4j_properties                  => $log4j_properties_real,
-    log4j2_properties                 => $log4j2_properties_real,
-    manage_config                     => $manage_config_real,
-    manage_webusers                   => $manage_webusers_real
-  }
+    class { 'activemq::package':
+      package     => $package,
+      version     => $version_real,
+      versionlock => $versionlock_real,
+      notify      => Class['activemq::service']
+    }
 
-  class { 'activemq::service':
-    ensure  => $ensure_real,
-    enabled => $enabled_real
-  }
+    class { 'activemq::config':
+      version                           => $version_real,
+      optional_config                   => $optional_config,
+      data_dir                          => $data_dir,
+      data_dir_tmp                      => $data_dir_tmp,
+      persistence_db_driver_version     => $persistence_db_driver_version_real,
+      persistence_db_type               => $persistence_db_type_real,
+      persistence_adapter               => $persistence_adapter_real,
+      advisorysupport                   => $advisorysupport_real,
+      selectoraware                     => $selectoraware_real,
+      managementcontext_createconnector => $managementcontext_createconnector_real,
+      transport_connector               => $transport_connector_real,
+      users                             => $users_real,
+      destinations                      => $destinations_real,
+      sysconfig_options                 => $sysconfig_options_real,
+      log4j_properties                  => $log4j_properties_real,
+      log4j2_properties                 => $log4j2_properties_real,
+      manage_config                     => $manage_config_real,
+      manage_webusers                   => $manage_webusers_real
+    }
 
-  Anchor['activemq::begin'] -> Class['Activemq::Package']
-    -> Class['Activemq::Config'] ~> Class['Activemq::Service'] -> Anchor['activemq::end']
+    class { 'activemq::service':
+      ensure  => $ensure_real,
+      enabled => $enabled_real
+    }
+
+    Anchor['activemq::begin'] -> Class['Activemq::Package']
+      -> Class['Activemq::Config'] ~> Class['Activemq::Service'] -> Anchor['activemq::end'] 
+
+  } else {
+
+    group { 'activemq':
+      ensure => 'present',
+      gid    => '92',
+    }
+  
+    user { 'activemq':
+      ensure     => 'present',
+      uid        => '92',
+      gid        => '92',
+      home       => '/usr/share/activemq',
+      managehome => 'false',
+      password   => '!!',
+      shell      => '/bin/bash',
+    }
+
+    file { $data_dir:
+      ensure => directory,
+      owner  => 'activemq',
+      group  => 'activemq'
+    }
+
+    file { $data_dir_tmp:
+      ensure => directory,
+      owner  => 'activemq',
+      group  => 'activemq'
+    }
+
+    file { "${data_dir}/heapdumps":
+      ensure => directory,
+      owner  => 'activemq',
+      group  => 'activemq',
+    }
+
+  }
 
 }
