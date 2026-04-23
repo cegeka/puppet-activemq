@@ -40,8 +40,13 @@ wrapper.java.mainclass=org.tanukisoftware.wrapper.WrapperSimpleApp
 wrapper.java.classpath.1=/usr/share/java/tanukiwrapper.jar
 wrapper.java.classpath.2=%ACTIVEMQ_HOME%/bin/activemq.jar
 
-# Uncomment to add mysql support
-#wrapper.java.classpath.3=/usr/share/java/mysql-connector-java.jar
+<% if @persistence_adapter == 'jdbc' -%>
+<% if @persistence_db_type == 'mysql' -%>
+wrapper.java.classpath.3=/usr/share/java/mysql-connector-java.jar
+<% elsif @persistence_db_type == 'oracle' -%>
+wrapper.java.classpath.3=/usr/share/java/ojdbc<%= @persistence_db_driver_version %>.jar
+<% end -%>
+<% end -%>
 
 # Java Library Path (location of Wrapper.DLL or libwrapper.so)
 # Handle both 32bit and 64bit tanukiwrapper
@@ -78,7 +83,7 @@ wrapper.java.additional.10=-XX:HeapDumpPath=<%= scope['activemq::heap_dump_path'
 wrapper.java.additional.11=-Dcom.sun.management.jmxremote.ssl=false
 wrapper.java.additional.12=-Dcom.sun.management.jmxremote.port=<%= scope['activemq::jmx_remote_port'] %>
 wrapper.java.additional.13=-Dcom.sun.management.jmxremote.rmi.port=<%= scope['activemq::jmx_remote_rmi_port'] %>
-wrapper.java.additional.14=-Dcom.sun.management.jmxremote.authenticate=<%= scope['activemq::jmx_authentication_enabled']  %>
+wrapper.java.additional.14=-Dcom.sun.management.jmxremote.authenticate=<%= scope['activemq::jmx_authentication_enabled'] %>
 <% if scope['activemq::jmx_authentication_enabled'] -%>
 wrapper.java.additional.15=-Dcom.sun.management.jmxremote.password.file=/etc/activemq/jmxremote.password
 wrapper.java.additional.16=-Dcom.sun.management.jmxremote.access.file=/etc/activemq/jmxremote.access
